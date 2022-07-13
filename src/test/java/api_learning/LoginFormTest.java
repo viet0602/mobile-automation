@@ -31,7 +31,7 @@ public class LoginFormTest {
             WebDriverWait wait = new WebDriverWait(appiumDriver,5);
             wait.until(ExpectedConditions.visibilityOfElementLocated(MobileBy.id("android:id/alertTitle")));
             MobileElement loginDialogTitleElem = appiumDriver.findElement(MobileBy.id("android:id/alertTitle"));
-            System.out.println(loginDialogTitleElem);
+            System.out.println(loginDialogTitleElem.getText());
             //DEBUG
             Thread.sleep(3000);
         }catch (Exception e){
