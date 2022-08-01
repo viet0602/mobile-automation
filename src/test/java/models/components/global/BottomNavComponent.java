@@ -8,7 +8,7 @@ import org.openqa.selenium.By;
 public class BottomNavComponent {
 
     private final AppiumDriver<MobileElement> appiumDriver;
-    private final static By loginIconSel = MobileBy.AccessibilityId("");
+    private final static By loginIconSel = MobileBy.AccessibilityId("Login");
 
     public BottomNavComponent(AppiumDriver<MobileElement> appiumDriver) {
         this.appiumDriver = appiumDriver;
