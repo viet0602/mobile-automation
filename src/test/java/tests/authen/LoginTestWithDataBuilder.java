@@ -13,7 +13,7 @@ import test_flows.authentication.LoginFlow;
 public class LoginTestWithDataBuilder {
 
     @Test(dataProvider = "loginCredData")
-    public void testLogin(LoginTestWithDataProvider.LoginCred loginCred) {
+    public void testLogin(LoginCred loginCred) {
         AppiumDriver<MobileElement> appiumDriver = DriverFactory.getDriver(Platform.ANDROID);
 
         try {
@@ -24,12 +24,13 @@ public class LoginTestWithDataBuilder {
         } catch ( Exception e ) {
             e.printStackTrace();
         }
+
         appiumDriver.quit();
     }
 
     @DataProvider
     public LoginCred[] loginCredData() {
-        String filePath = "src/test/java/test_data/authen/LoginCreds.json";
+        String filePath = "/src/test/java/test_data/authen/LoginCreds.json";
         return DataObjectBuilder.buildDataObject(filePath, LoginCred[].class);
     }
 }
