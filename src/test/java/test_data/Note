@@ -1,0 +1,17 @@
+Concept: This folder contains data test
+"authen" package: contain test data of authen function
+models: xây dựng hình hài cho 1 test data cho 1 loại nào đó bằng java
+--> Mình có 1 data test viết bằng file json ở package authen
+==> Phải có 1 thằng đứng giữa để map data chứa ở file json sang thành 1 object/array object của java
+---> Build 1 class Data object model
+
+LoginCred convertedFromJSON = gson.fromJson(loginCredJSONData, LoginCred.class);
+loginCredJSONData: data đổ vào
+LoginCred.class: Cái khuôn để đổ data vào, khuôn chứa các loại dữ liệu khác nhau nên muốn dùng chung cho tất cả thì
+nó phải là Generate Type
+List <E> : E là dạng generate tyle - T: type, V: value, E: Element
+
+--public static<Teo> Teo buildDataObject(String filePath, Class<Teo> dataType)
+Teo(1): kiểu Generate Type
+Teo(2): Kiểu dữ liệu trả về --> class cũng phải là Teo(3)
+Convention:
