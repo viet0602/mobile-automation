@@ -10,7 +10,7 @@ import tests.BaseTest;
 public class LoginTestWithBaseTest extends BaseTest {
     @Test(dataProvider = "loginCredData")
     public void testLogin(LoginCred loginCred) {
-        LoginFlow loginFlow = new LoginFlow(appiumDriver, loginCred.getEmail(), loginCred.getPassword());
+        LoginFlow loginFlow = new LoginFlow(getDriver(), loginCred.getEmail(), loginCred.getPassword());
         loginFlow.gotoLoginScreen();
         loginFlow.login();
         loginFlow.verifyLogin();
@@ -21,6 +21,4 @@ public class LoginTestWithBaseTest extends BaseTest {
         String filePath = "/src/test/java/test_data/authen/LoginCreds.json";
         return DataObjectBuilder.buildDataObject(filePath, LoginCred[].class);
     }
-
-
 }

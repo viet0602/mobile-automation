@@ -15,7 +15,7 @@ public class LoginWithComponents {
 
         try {
             LoginScreen loginScreen = new LoginScreen(appiumDriver);
-            BottomNavComponent bottomNavComp = loginScreen.bottomNavCompo();
+            BottomNavComponent bottomNavComp = loginScreen.bottomNavComp();
             LoginFormComponent loginFormComp = loginScreen.loginFormComp();
 
             bottomNavComp.clickOnLoginIcon();

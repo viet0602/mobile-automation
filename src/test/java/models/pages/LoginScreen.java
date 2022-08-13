@@ -17,7 +17,7 @@ public class LoginScreen {
         return new LoginFormComponent(appiumDriver);
     }
 
-    public BottomNavComponent bottomNavCompo(){
+    public BottomNavComponent bottomNavComp(){
         return new BottomNavComponent(appiumDriver);
     }
 }
