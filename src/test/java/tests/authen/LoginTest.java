@@ -1,53 +1,30 @@
 package tests.authen;
 
-import driver.DriverFactory;
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.MobileElement;
+import io.qameta.allure.Description;
+import io.qameta.allure.TmsLink;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import platform.Platform;
+import test_data.DataObjectBuilder;
+import test_data.models.LoginCred;
 import test_flows.authentication.LoginFlow;
+import tests.BaseTest;
 
-import java.util.ArrayList;
-import java.util.List;
+public class LoginTest extends BaseTest {
 
-public class LoginTest {
-
-    @Test
-    public void testLogin() {
-        AppiumDriver<MobileElement> appiumDriver = DriverFactory.getDriver(Platform.ANDROID);
-        List<LoginCred> loginCreds = new ArrayList<>();
-        loginCreds.add(new LoginCred("teo@", "12345678"));
-        loginCreds.add(new LoginCred("teo@sth.com", "1234567"));
-        loginCreds.add(new LoginCred("teo@sth.com", "12345678"));
-
-        try {
-            for (LoginCred loginCred : loginCreds) {
-                LoginFlow loginFlow = new LoginFlow(appiumDriver, loginCred.getEmail(), loginCred.getPassword());
-                loginFlow.gotoLoginScreen();
-                loginFlow.login();
-                loginFlow.verifyLogin();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        appiumDriver.quit();
+    @Description("Login Test with data driven")
+    @Test(dataProvider = "loginCredData", description = "Login Test")
+    @TmsLink("TEST-123")
+    public void testLogin(LoginCred loginCred) {
+        System.out.println("--> Session ID: " + getDriver().getSessionId());
+        LoginFlow loginFlow = new LoginFlow(getDriver(), loginCred.getEmail(), loginCred.getPassword());
+        loginFlow.gotoLoginScreen();
+        loginFlow.login();
+        loginFlow.verifyLogin();
     }
 
-    public static class LoginCred {
-        private String email;
-        private String password;
-
-        public LoginCred(String email, String password) {
-            this.email = email;
-            this.password = password;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public String getPassword() {
-            return password;
-        }
+    @DataProvider
+    public LoginCred[] loginCredData() {
+        String filePath = "/src/test/java/test_data/authen/LoginCreds.json";
+        return DataObjectBuilder.buildDataObject(filePath, LoginCred[].class);
     }
 }
