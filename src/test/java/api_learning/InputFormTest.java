@@ -18,7 +18,7 @@ public class InputFormTest {
 
         String inputText = "This is testing from Viet";
 
-        AppiumDriver<MobileElement> appiumDriver = DriverFactory.getDriver(Platform.ANDROID);
+        AppiumDriver<MobileElement> appiumDriver = DriverFactory.getDriver(Platform.android);
         try {
             MobileElement navFormsBtnElem = appiumDriver.findElement(MobileBy.AccessibilityId("Forms"));
             navFormsBtnElem.click();

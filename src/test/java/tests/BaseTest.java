@@ -9,6 +9,7 @@ import org.openqa.selenium.OutputType;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import platform.Platform;
 import org.testng.ITestResult;
@@ -31,19 +32,23 @@ public class BaseTest {
 
     private String udid;
     private String systemPort;
+    private String platformName;
+    private String platformVersion;
 
     protected AppiumDriver<MobileElement> getDriver() {
-        return driverThread.get().getDriver(Platform.ANDROID, udid, systemPort);
+        return driverThread.get().getDriver(Platform.valueOf(platformName), udid, systemPort,platformVersion);
     }
 
     // TestNG chạy sẽ chia ra làm nhiều thread để chạy song song. Mỗi lần chia thread thì
     // tạo 1 DriverFactory rồi nhét vào trong driverThreadPool và trả về driverThread mình đang có
     //Đảm bảo: Cứ 1 thread run thì sẽ có 1 driver factory object khác nhau
     @BeforeTest
-    @Parameters({"udid", "systemPort"})
-    public void initAppiumSession(String udid, String systemPort) {
+    @Parameters({"udid", "systemPort","platformName","platformVersion"})
+    public void initAppiumSession(String udid, String systemPort, String platformName, @Optional("platformVersion") String platformVersion) {
         this.udid = udid;
         this.systemPort = systemPort;
+        this.platformName = platformName;
+        this.platformVersion = platformVersion;
         driverThread = ThreadLocal.withInitial(() -> {
             DriverFactory driverThread = new DriverFactory();
             driverThreadPool.add(driverThread);
