@@ -10,34 +10,38 @@ import platform.Platform;
 
 import java.io.File;
 
-public class TakingScreenShot {
+public class TakingScreenshot {
 
     public static void main(String[] args) {
+
         AppiumDriver<MobileElement> appiumDriver = DriverFactory.getDriver(Platform.android);
+
         try {
             // Navigate to Login screen
             MobileElement navLoginScreenBtnElem = appiumDriver.findElement(MobileBy.AccessibilityId("Login"));
             navLoginScreenBtnElem.click();
 
             // Whole screen
-            File basic64ScreenshotData = appiumDriver.getScreenshotAs(OutputType.FILE);
+            File base64ScreenshotData = appiumDriver.getScreenshotAs(OutputType.FILE);
             String fileLocation = System.getProperty("user.dir").concat("/screenshots/").concat("LoginScreen.png");
-            FileUtils.copyFile(basic64ScreenshotData, new File(fileLocation));
+            FileUtils.copyFile(base64ScreenshotData, new File(fileLocation));
+
             // An area
             MobileElement loginFormElem = appiumDriver.findElement(MobileBy.AccessibilityId("Login-screen"));
-            basic64ScreenshotData = loginFormElem.getScreenshotAs(OutputType.FILE);
+            base64ScreenshotData = loginFormElem.getScreenshotAs(OutputType.FILE);
             fileLocation = System.getProperty("user.dir").concat("/screenshots/").concat("LoginForm.png");
-            FileUtils.copyFile(basic64ScreenshotData, new File(fileLocation));
+            FileUtils.copyFile(base64ScreenshotData, new File(fileLocation));
 
             // An element
             MobileElement loginBtnElem = appiumDriver.findElement(MobileBy.AccessibilityId("button-LOGIN"));
-            basic64ScreenshotData = loginBtnElem.getScreenshotAs(OutputType.FILE);
+            base64ScreenshotData = loginBtnElem.getScreenshotAs(OutputType.FILE);
             fileLocation = System.getProperty("user.dir").concat("/screenshots/").concat("LoginBtn.png");
-            FileUtils.copyFile(basic64ScreenshotData, new File(fileLocation));
+            FileUtils.copyFile(base64ScreenshotData, new File(fileLocation));
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
+        appiumDriver.quit();
     }
 }

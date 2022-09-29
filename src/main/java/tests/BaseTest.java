@@ -6,13 +6,10 @@ import io.appium.java_client.MobileElement;
 import io.qameta.allure.Allure;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
-import platform.Platform;
 import org.testng.ITestResult;
+import org.testng.annotations.*;
+import org.testng.annotations.Optional;
+import platform.Platform;
 
 import java.io.File;
 import java.io.InputStream;
@@ -24,31 +21,20 @@ import java.util.*;
 
 public class BaseTest {
 
-    //List của DriverFactory, synchronized list: Trong quá trình ghi/ thay đổi dữ liệu 1 thành phần trên đó
-    // thì ko thằng nào được đụng chạm tới list này
     private static final List<DriverFactory> driverThreadPool = Collections.synchronizedList(new ArrayList<>());
-    //Thread local
     private static ThreadLocal<DriverFactory> driverThread;
 
-    private String udid;
-    private String systemPort;
-    private String platformName;
-    private String platformVersion;
+    private  String udid;
+    private  String systemPort;
+    private  String platformName;
+    private  String platformVersion;
 
-    protected AppiumDriver<MobileElement> getDriver() {
-        return driverThread.get().getDriver(Platform.valueOf(platformName), udid, systemPort,platformVersion);
+    protected AppiumDriver<MobileElement> getDriver(){
+        return driverThread.get().getDriver(Platform.valueOf(platformName), udid, systemPort, platformVersion);
     }
 
-    // TestNG chạy sẽ chia ra làm nhiều thread để chạy song song. Mỗi lần chia thread thì
-    // tạo 1 DriverFactory rồi nhét vào trong driverThreadPool và trả về driverThread mình đang có
-    //Đảm bảo: Cứ 1 thread run thì sẽ có 1 driver factory object khác nhau
     @BeforeTest
-    @Parameters({"udid", "systemPort","platformName","platformVersion"})
-    public void initAppiumSession(String udid, String systemPort, String platformName, @Optional("platformVersion") String platformVersion) {
-        this.udid = udid;
-        this.systemPort = systemPort;
-        this.platformName = platformName;
-        this.platformVersion = platformVersion;
+    public void initAppiumSession(String udid, String systemPort, String platformName, @Optional("platformVersion") String platformVersion){
         driverThread = ThreadLocal.withInitial(() -> {
             DriverFactory driverThread = new DriverFactory();
             driverThreadPool.add(driverThread);
@@ -56,14 +42,23 @@ public class BaseTest {
         });
     }
 
+    @BeforeClass
+    @Parameters({"udid", "systemPort", "platformName", "platformVersion"})
+    public void getTestParams(String udid, String systemPort, String platformName, @Optional("platformVersion") String platformVersion){
+        this.udid = udid;
+        this.systemPort = systemPort;
+        this.platformName = platformName;
+        this.platformVersion = platformVersion;
+    }
+
     @AfterTest(alwaysRun = true)
-    public void quitAppiumSession() {
+    public void quitAppiumSession(){
         driverThread.get().quitAppiumDriver();
     }
 
     @AfterMethod(description = "Capture screenshot if test is failed")
-    public void captureScreenshot(ITestResult result) {
-        if (result.getStatus() == ITestResult.FAILURE) {
+    public void captureScreenshot(ITestResult result){
+        if(result.getStatus() == ITestResult.FAILURE){
             // 1. Get the test method name
             String testMethodName = result.getName();
 
@@ -88,7 +83,7 @@ public class BaseTest {
                 Path screenshotContentPath = Paths.get(fileLocation);
                 InputStream inputStream = Files.newInputStream(screenshotContentPath);
                 Allure.addAttachment(testMethodName, inputStream);
-            } catch ( Exception e ) {
+            } catch (Exception e){
                 e.printStackTrace();
             }
         }

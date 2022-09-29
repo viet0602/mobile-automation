@@ -25,7 +25,7 @@ public class DriverFactory implements MobileCapabilityTypeEx {
 
         try {
             appiumServer = new URL("http://localhost:4723/wd/hub");
-        } catch (Exception e) {
+        } catch ( Exception e ) {
             e.printStackTrace();
         }
 
@@ -48,15 +48,31 @@ public class DriverFactory implements MobileCapabilityTypeEx {
     }
 
     public AppiumDriver<MobileElement> getDriver(Platform platform, String udid, String systemPort, String platformVersion) {
+        //Get Enviroiment variables (env) from Configuration
+        String remoteInfoViaEnvVar = System.getenv("env");
+        //Get via command java -jar /path/file.jar env=sth
+        String remoteInfoViaCommandVar = System.getProperty("env");
+        String isRemote = remoteInfoViaEnvVar == null ? remoteInfoViaCommandVar : remoteInfoViaEnvVar;
 
-        String isRemote= System.getenv("env")==null?System.getProperty("env"):System.getenv("env");
-        if(appiumDriver == null) {
+        if (isRemote == null) {
+            throw new IllegalArgumentException("Please provide env variable [env]!");
+        }
+        //Nơi mình request lên
+        String targetServer = "https://localhost:4723/wd/hub";
+        if (isRemote.equals("true")) {
+            String hubIPAdd = System.getenv("hub");
+            if (hubIPAdd == null) hubIPAdd = System.getProperty("hub");
+            if (hubIPAdd == null) {
+                throw new IllegalArgumentException("Please provide hub ip address via env variable [hub]!");
+            }
+            targetServer = hubIPAdd + ":4444/wd/hub";
+        }
 
+        if (appiumDriver == null) {
             URL appiumServer = null;
-            String targetServer = "http://192.168.4.175:4444/wd/hub";
             try {
                 appiumServer = new URL(targetServer);
-            } catch (Exception e) {
+            } catch ( Exception e ) {
                 e.printStackTrace();
             }
             if (appiumServer == null)
@@ -64,7 +80,7 @@ public class DriverFactory implements MobileCapabilityTypeEx {
 
             //Desired Capability
             DesiredCapabilities desiredCaps = new DesiredCapabilities();
-            desiredCaps.setCapability(PLATFORM_NAME,platform);
+            desiredCaps.setCapability(PLATFORM_NAME, platform);
             switch (platform) {
                 case android:
                     desiredCaps.setCapability(AUTOMATION_NAME, "uiautomator2");

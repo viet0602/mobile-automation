@@ -12,10 +12,7 @@ public class DataObjectBuilder {
 
     public static <T> T buildDataObject(String filePath, Class<T> dataType) {
         T returnedData;
-        //Khi đọc file phải biết dg dẫn chính xác ở đâu, nhưng đưa vào thì là tương đối vì ở mỗi máy nó có vị trí khác nhau
         String absoluteFilePath = System.getProperty("user.dir").concat(filePath);
-        //Đưa data từ file mình đọc được vào GSON
-        // try with resource
         try (
                 Reader reader = Files.newBufferedReader(Paths.get(absoluteFilePath));
         ) {
